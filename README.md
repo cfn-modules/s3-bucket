@@ -45,7 +45,7 @@ Resources:
   <tbody>
     <tr>
       <td>KmsKeyModule</td>
-      <td>Stack name of KMS key module</td>
+      <td>Stack name of <a href="https://www.npmjs.com/package/@cfn-modules/kms-key">kms-key module</a></td>
       <td></td>
       <td>no</td>
       <td></td>
