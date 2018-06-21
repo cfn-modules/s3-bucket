@@ -39,6 +39,23 @@ Parameters:
     Type: Number
     Default: 0
     MinValue: 0
+  # TODO add SNS event target when sns-topic module is present
+  LambdaEventTargetLambdaModule1:
+    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket.'
+    Type: String
+    Default: ''
+  LambdaEventType1:
+    Description: 'S3 bucket events you want to receive'
+    Type: String
+    Default: 's3:ObjectCreated:*'
+  QueueEventTargetQueueModule1:
+    Description: 'Optional stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue AllowS3Access is set to true)'
+    Type: String
+    Default: ''
+  QueueEventType1:
+    Description: 'S3 bucket events you want to receive'
+    Type: String
+    Default: 's3:ObjectCreated:*'
 Conditions:
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasPublicReadAccess: !Equals [!Ref Access, PublicRead]
@@ -48,7 +65,39 @@ Conditions:
   HadVersioning: !Equals [!Ref Versioning, 'false-but-was-true']
   HasNoncurrentVersionExpirationInDays: !Not [!Equals [!Ref NoncurrentVersionExpirationInDays, 0]]
   NeedsBucketPolicy: !Or [!Condition HasPublicReadAccess, !Condition HasCloudFrontReadAccess, !Condition HasKmsKeyModule]
+  HasLambdaEventTargetLambdaModule1: !Not [!Equals [!Ref LambdaEventTargetLambdaModule1, '']]
+  HasQueueEventTargetQueueModule1: !Not [!Equals [!Ref QueueEventTargetQueueModule1, '']]
 Resources:
+  PolicyLambdaEventTarget1:
+    Type: 'AWS::IAM::Policy'
+    Condition: HasLambdaEventTargetLambdaModule1
+    Properties:
+      Roles:
+      - 'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-RoleArn'
+      PolicyName: !Sub 's3-bucket-access-${Bucket}'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - 's3:DeleteObject*'
+          - 's3:GetObject*'
+          - 's3:ListBucket*'
+          - 's3:ListMultipartUploadParts'
+          - 's3:PutObject*'
+          Resource:
+          - !GetAtt 'Bucket.Arn'
+          - !Sub '${Bucket.Arn}/*'
+  PermissionLambdaEventTarget1:
+    Condition: HasLambdaEventTargetLambdaModule1
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName:
+        'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-Arn'
+      Principal: 's3.amazonaws.com'
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: !GetAtt 'Bucket.Arn'
   Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -60,6 +109,11 @@ Resources:
           Status: Enabled
         - NoncurrentVersionExpirationInDays: !If [HasNoncurrentVersionExpirationInDays, !Ref NoncurrentVersionExpirationInDays, 1]
           Status: !If [HasNoncurrentVersionExpirationInDays, Enabled, Disabled]
+      NotificationConfiguration:
+        LambdaConfigurations:
+        - !If [HasLambdaEventTargetLambdaModule1, {Event: !Ref LambdaEventType1, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-Arn'}}, !Ref 'AWS::NoValue']
+        QueueConfigurations:
+        - !If [HasQueueEventTargetQueueModule1, {Event: !Ref QueueEventType1, Queue: {'Fn::ImportValue': !Sub '${QueueEventTargetQueueModule1}-Arn'}}, !Ref 'AWS::NoValue']
       VersioningConfiguration: !If [HasVersioning, {Status: Enabled}, !If [HadVersioning, {Status: Suspended}, !Ref 'AWS::NoValue']]
       BucketEncryption: !If [HasKmsKeyModule, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
   BucketPolicy:
@@ -105,7 +159,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '0.0.2'
+    Value: '0.0.3'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:
