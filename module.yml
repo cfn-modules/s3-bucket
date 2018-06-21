@@ -41,7 +41,7 @@ Parameters:
     MinValue: 0
   # TODO add SNS event target when sns-topic module is present
   LambdaEventTargetLambdaModule1:
-    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket.'
+    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket (Only works if lambda-function S3BucketAccess is set to true). Also grants the Lambda function access to this bucket.'
     Type: String
     Default: ''
   LambdaEventType1:
@@ -49,7 +49,7 @@ Parameters:
     Type: String
     Default: 's3:ObjectCreated:*'
   QueueEventTargetQueueModule1:
-    Description: 'Optional stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue AllowS3Access is set to true)'
+    Description: 'Optional stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue S3BucketAccess is set to true)'
     Type: String
     Default: ''
   QueueEventType1:

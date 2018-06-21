@@ -80,7 +80,7 @@ Resources:
     </tr>
     <tr>
       <td>LambdaEventTargetLambdaModule1</td>
-      <td>Stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket</td>
+      <td>Stack name of lambda-function module to receive events from this S3 bucket (Only works if lambda-function S3BucketAccess is set to true). Also grants the Lambda function access to this bucket.</td>
       <td></td>
       <td>no</td>
       <td></td>
@@ -94,7 +94,7 @@ Resources:
     </tr>
     <tr>
       <td>QueueEventTargetQueueModule1</td>
-      <td>Stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue AllowS3Access is set to true)</td>
+      <td>Stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue S3BucketAccess is set to true)</td>
       <td></td>
       <td>no</td>
       <td></td>
