@@ -45,7 +45,7 @@ Parameters:
     Type: String
     Default: ''
   LambdaEventType1:
-    Description: 'S3 bucket events you want to receive'
+    Description: 'S3 bucket events you want to receive (can not be the same as QueueEventType1)'
     Type: String
     Default: 's3:ObjectCreated:*'
   QueueEventTargetQueueModule1:
@@ -53,7 +53,7 @@ Parameters:
     Type: String
     Default: ''
   QueueEventType1:
-    Description: 'S3 bucket events you want to receive'
+    Description: 'S3 bucket events you want to receive (can not be the same as LambdaEventType1)'
     Type: String
     Default: 's3:ObjectCreated:*'
 Conditions:
