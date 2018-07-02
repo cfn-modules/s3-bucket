@@ -65,7 +65,7 @@ Resources:
     Properties:
       Roles:
       - 'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-RoleName'
-      PolicyName: 's3-bucket-access1' # TODO this is not super unique if multiple s3 buckets are used for the same Lambda it breaks
+      PolicyName: !Sub 'cfn-modules-${Bucket}' # ASCII characters minus the following reserved characters: backward slash (\), forward slash (/), asterisk (*), question mark (?), and white space
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -139,7 +139,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '0.0.5'
+    Value: '0.0.6'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:
