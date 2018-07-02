@@ -92,19 +92,5 @@ Resources:
       <td>no</td>
       <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
     </tr>
-    <tr>
-      <td>QueueEventTargetQueueModule1</td>
-      <td>Stack name of sqs-queue module to receive events from this S3 bucket (Only works if sqs-queue S3BucketAccess is set to true)</td>
-      <td></td>
-      <td>no</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>QueueEventType1</td>
-      <td>S3 bucket events you want to receive (can not be the same as LambdaEventType1)</td>
-      <td>s3:ObjectCreated:*</td>
-      <td>no</td>
-      <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
-    </tr>
   </tbody>
 </table>
