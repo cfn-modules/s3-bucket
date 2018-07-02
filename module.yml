@@ -139,7 +139,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '0.0.6'
+    Value: '0.0.7'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:
