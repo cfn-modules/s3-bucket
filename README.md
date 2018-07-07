@@ -94,3 +94,7 @@ Resources:
     </tr>
   </tbody>
 </table>
+
+## Limitations
+
+* Secure: Backups are only per object (you can not easily restore the whole bucket to a specific state)
