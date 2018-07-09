@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/cfn-modules/s3-bucket.svg?branch=master)](https://travis-ci.org/cfn-modules/s3-bucket)
+[![NPM version](https://img.shields.io/npm/v/@cfn-modules/s3-bucket.svg)](https://www.npmjs.com/package/@cfn-modules/s3-bucket)
+
 # cfn-modules: AWS S3 bucket
 
 AWS S3 bucket with encryption and backups.
