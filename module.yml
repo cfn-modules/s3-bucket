@@ -41,7 +41,7 @@ Parameters:
     MinValue: 0
   # TODO add SNS event target when sns-topic module is present
   LambdaEventTargetLambdaModule1:
-    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket (Only works if lambda-function S3BucketAccess is set to true). Also grants the Lambda function access to this bucket.'
+    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.'
     Type: String
     Default: ''
   LambdaEventType1:
@@ -79,6 +79,15 @@ Resources:
           Resource:
           - !GetAtt 'Bucket.Arn'
           - !Sub '${Bucket.Arn}/*'
+  PermissionLambdaEventTarget1:
+    Condition: HasLambdaEventTargetLambdaModule1
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-Arn'}
+      Principal: 's3.amazonaws.com'
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: !GetAtt 'Bucket.Arn'
   Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -139,7 +148,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '0.0.7'
+    Value: '0.0.8'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:

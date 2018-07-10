@@ -30,6 +30,8 @@ Resources:
         Access: Private # optional
         Versioning: 'true' # optional
         NoncurrentVersionExpirationInDays: 0 # optional
+        LambdaEventTargetLambdaModule1: '' # optional
+        LambdaEventType1: 's3:ObjectCreated:*' # optional
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
 ```
 
@@ -83,7 +85,7 @@ Resources:
     </tr>
     <tr>
       <td>LambdaEventTargetLambdaModule1</td>
-      <td>Stack name of lambda-function module to receive events from this S3 bucket (Only works if lambda-function S3BucketAccess is set to true). Also grants the Lambda function access to this bucket.</td>
+      <td>Stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.</td>
       <td></td>
       <td>no</td>
       <td></td>
