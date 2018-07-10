@@ -87,7 +87,7 @@ Resources:
       FunctionName: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-Arn'}
       Principal: 's3.amazonaws.com'
       SourceAccount: !Ref 'AWS::AccountId'
-      SourceArn: !If [HasBucketName, !Sub 'arn:aws:s3:::${BucketName}', !Ref 'AWS::NoValue'] # TODO least privilege only works for predefined bucket name (document limitation)
+      SourceArn: !If [HasBucketName, !Sub 'arn:aws:s3:::${BucketName}', !Ref 'AWS::NoValue'] # least privilege only works when BucketName is set (documented limitation)
   Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:

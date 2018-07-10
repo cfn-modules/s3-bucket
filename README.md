@@ -103,3 +103,4 @@ Resources:
 ## Limitations
 
 * Secure: Backups are only per object (you can not easily restore the whole bucket to a specific state)
+* Secure: If you connect a Lambda function without setting the `BucketName` parameter the least privilege principle is softened: Invocations to the Lambda function are allowed from all S3 buckets inside your AWS account.
