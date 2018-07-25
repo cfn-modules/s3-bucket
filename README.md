@@ -29,7 +29,8 @@ Resources:
         BucketName: '' # optional
         Access: Private # optional
         Versioning: 'true' # optional
-        NoncurrentVersionExpirationInDays: 0 # optional
+        NoncurrentVersionExpirationInDays: '0' # optional
+        ExpirationInDays: '0' # optional
         LambdaEventTargetLambdaModule1: '' # optional
         LambdaEventType1: 's3:ObjectCreated:*' # optional
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
@@ -67,7 +68,7 @@ Resources:
       <td>Access policy of the bucket</td>
       <td>Private</td>
       <td>no</td>
-      <td>[Private, PublicRead, CloudFrontRead]</td>
+      <td>[Private, PublicRead, CloudFrontRead, ElbAccessLogWrite]</td>
     </tr>
     <tr>
       <td>Versioning</td>
@@ -79,6 +80,13 @@ Resources:
     <tr>
       <td>NoncurrentVersionExpirationInDays</td>
       <td>Remove noncurrent object versions after days (set to 0 to disable)</td>
+      <td>0</td>
+      <td>no</td>
+      <td>[0-N]</td>
+    </tr>
+    <tr>
+      <td>ExpirationInDays</td>
+      <td>Remove objects after days (set to 0 to disable).</td>
       <td>0</td>
       <td>no</td>
       <td>[0-N]</td>
