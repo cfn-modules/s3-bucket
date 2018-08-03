@@ -33,6 +33,10 @@ Resources:
         ExpirationInDays: '0' # optional
         LambdaEventTargetLambdaModule1: '' # optional
         LambdaEventType1: 's3:ObjectCreated:*' # optional
+        LambdaEventTargetLambdaModule2: '' # optional
+        LambdaEventType2: 's3:ObjectRemoved:*' # optional
+        LambdaEventTargetLambdaModule3: '' # optional
+        LambdaEventType3: 's3:ReducedRedundancyLostObject' # optional
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
 ```
 
@@ -100,8 +104,36 @@ Resources:
     </tr>
     <tr>
       <td>LambdaEventType1</td>
-      <td>S3 bucket events you want to receive (can not be the same as QueueEventType1)</td>
+      <td>S3 bucket events you want to receive (can not be the same as LambdaEventType2 or LambdaEventType3)</td>
       <td>s3:ObjectCreated:*</td>
+      <td>no</td>
+      <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
+    </tr>
+    <tr>
+      <td>LambdaEventTargetLambdaModule2</td>
+      <td>Stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.</td>
+      <td></td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>LambdaEventType2</td>
+      <td>S3 bucket events you want to receive (can not be the same as LambdaEventType1 or LambdaEventType3)</td>
+      <td>s3:ObjectRemoved:*</td>
+      <td>no</td>
+      <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
+    </tr>
+    <tr>
+      <td>LambdaEventTargetLambdaModule31</td>
+      <td>Stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.</td>
+      <td></td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>LambdaEventType3</td>
+      <td>S3 bucket events you want to receive (can not be the same as LambdaEventType1 or LambdaEventType2)</td>
+      <td>s3:ReducedRedundancyLostObject</td>
       <td>no</td>
       <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
     </tr>

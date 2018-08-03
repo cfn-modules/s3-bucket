@@ -53,6 +53,22 @@ Parameters:
     Description: 'S3 bucket events you want to receive'
     Type: String
     Default: 's3:ObjectCreated:*'
+  LambdaEventTargetLambdaModule2:
+    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.'
+    Type: String
+    Default: ''
+  LambdaEventType2:
+    Description: 'S3 bucket events you want to receive'
+    Type: String
+    Default: 's3:ObjectRemoved:*'
+  LambdaEventTargetLambdaModule3:
+    Description: 'Optional stack name of lambda-function module to receive events from this S3 bucket. Also grants the Lambda function access to this bucket and this bucket access to the Lambda function.'
+    Type: String
+    Default: ''
+  LambdaEventType3:
+    Description: 'S3 bucket events you want to receive'
+    Type: String
+    Default: 's3:ReducedRedundancyLostObject'
 Conditions:
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasPublicReadAccess: !Equals [!Ref Access, PublicRead]
@@ -65,6 +81,8 @@ Conditions:
   HasExpirationInDays: !Not [!Equals [!Ref ExpirationInDays, 0]]
   NeedsBucketPolicy: !Or [!Condition HasPublicReadAccess, !Condition HasCloudFrontReadAccess, !Condition HasKmsKeyModule, !Condition HasElbAccessLogWriteAccess]
   HasLambdaEventTargetLambdaModule1: !Not [!Equals [!Ref LambdaEventTargetLambdaModule1, '']]
+  HasLambdaEventTargetLambdaModule2: !Not [!Equals [!Ref LambdaEventTargetLambdaModule2, '']]
+  HasLambdaEventTargetLambdaModule3: !Not [!Equals [!Ref LambdaEventTargetLambdaModule3, '']]
 Resources:
   PolicyLambdaEventTarget1:
     Type: 'AWS::IAM::Policy'
@@ -72,7 +90,47 @@ Resources:
     Properties:
       Roles:
       - 'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-RoleName'
-      PolicyName: !Sub 'cfn-modules-${Bucket}' # ASCII characters minus the following reserved characters: backward slash (\), forward slash (/), asterisk (*), question mark (?), and white space
+      PolicyName: !Sub 'cfn-modules-${Bucket}-target1' # ASCII characters minus the following reserved characters: backward slash (\), forward slash (/), asterisk (*), question mark (?), and white space
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - 's3:DeleteObject*'
+          - 's3:GetObject*'
+          - 's3:ListBucket*'
+          - 's3:ListMultipartUploadParts'
+          - 's3:PutObject*'
+          Resource:
+          - !GetAtt 'Bucket.Arn'
+          - !Sub '${Bucket.Arn}/*'
+  PolicyLambdaEventTarget2:
+    Type: 'AWS::IAM::Policy'
+    Condition: HasLambdaEventTargetLambdaModule2
+    Properties:
+      Roles:
+      - 'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule2}-RoleName'
+      PolicyName: !Sub 'cfn-modules-${Bucket}-target2' # ASCII characters minus the following reserved characters: backward slash (\), forward slash (/), asterisk (*), question mark (?), and white space
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - 's3:DeleteObject*'
+          - 's3:GetObject*'
+          - 's3:ListBucket*'
+          - 's3:ListMultipartUploadParts'
+          - 's3:PutObject*'
+          Resource:
+          - !GetAtt 'Bucket.Arn'
+          - !Sub '${Bucket.Arn}/*'
+  PolicyLambdaEventTarget3:
+    Type: 'AWS::IAM::Policy'
+    Condition: HasLambdaEventTargetLambdaModule3
+    Properties:
+      Roles:
+      - 'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule3}-RoleName'
+      PolicyName: !Sub 'cfn-modules-${Bucket}-target3' # ASCII characters minus the following reserved characters: backward slash (\), forward slash (/), asterisk (*), question mark (?), and white space
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -95,6 +153,24 @@ Resources:
       Principal: 's3.amazonaws.com'
       SourceAccount: !Ref 'AWS::AccountId'
       SourceArn: !If [HasBucketName, !Sub 'arn:aws:s3:::${BucketName}', !Ref 'AWS::NoValue'] # least privilege only works when BucketName is set (documented limitation)
+  PermissionLambdaEventTarget2:
+    Condition: HasLambdaEventTargetLambdaModule2
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule2}-Arn'}
+      Principal: 's3.amazonaws.com'
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: !If [HasBucketName, !Sub 'arn:aws:s3:::${BucketName}', !Ref 'AWS::NoValue'] # least privilege only works when BucketName is set (documented limitation)
+  PermissionLambdaEventTarget3:
+    Condition: HasLambdaEventTargetLambdaModule3
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule3}-Arn'}
+      Principal: 's3.amazonaws.com'
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: !If [HasBucketName, !Sub 'arn:aws:s3:::${BucketName}', !Ref 'AWS::NoValue'] # least privilege only works when BucketName is set (documented limitation)
   Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -111,6 +187,8 @@ Resources:
       NotificationConfiguration:
         LambdaConfigurations:
         - !If [HasLambdaEventTargetLambdaModule1, {Event: !Ref LambdaEventType1, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule1}-Arn'}}, !Ref 'AWS::NoValue']
+        - !If [HasLambdaEventTargetLambdaModule2, {Event: !Ref LambdaEventType2, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule2}-Arn'}}, !Ref 'AWS::NoValue']
+        - !If [HasLambdaEventTargetLambdaModule3, {Event: !Ref LambdaEventType3, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule3}-Arn'}}, !Ref 'AWS::NoValue']
         # QueueConfigurations: # Using SQS as a target does not work because the SQS queue policy can not be restricted to an AWS account (only to single S3 buckets which is not possible because we don't have that information (cyclic dependency)).
       VersioningConfiguration: !If [HasVersioning, {Status: Enabled}, !If [HadVersioning, {Status: Suspended}, !Ref 'AWS::NoValue']]
       BucketEncryption: !If [HasKmsKeyModule, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
@@ -181,7 +259,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '0.0.11'
+    Value: '0.0.12'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:
