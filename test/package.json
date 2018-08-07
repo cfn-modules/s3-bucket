@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "dependencies": {
+    "eslint": "5.1.0",
+    "ava": "0.25.0",
+    "@cfn-modules/test": "^0.1.2",
+    "@cfn-modules/s3-bucket": "file:../",
+    "@cfn-modules/kms-key": "^0.0.3",
+    "@cfn-modules/lambda-function": "^0.0.20"
+  },
+  "scripts": {
+    "test": "eslint . && ava -c 4 *.js"
+  }
+}

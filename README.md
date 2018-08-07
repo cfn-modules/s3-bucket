@@ -21,7 +21,7 @@ npm i @cfn-modules/s3-bucket
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'cfn-modules example'
 Resources:
-  Queue:
+  Bucket:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       Parameters:
