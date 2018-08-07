@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'cfn-modules test'
+Resources:
+  Function:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      Parameters:
+        Handler: 'with-lambda.handler'
+        Runtime: 'nodejs8.10'
+      TemplateURL: './node_modules/@cfn-modules/lambda-function/module.yml'
+  Bucket:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      Parameters:
+        LambdaEventTargetLambdaModule1: !GetAtt 'Function.Outputs.StackName'
+      TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
