@@ -55,7 +55,7 @@ Resources:
   <tbody>
     <tr>
       <td>KmsKeyModule</td>
-      <td>Stack name of <a href="https://www.npmjs.com/package/@cfn-modules/kms-key">kms-key module</a></td>
+      <td>Stack name of <a href="https://www.npmjs.com/package/@cfn-modules/kms-key">kms-key module</a> (only works in combination with Access := [Private, PublicRead])</td>
       <td></td>
       <td>no</td>
       <td></td>
@@ -72,7 +72,7 @@ Resources:
       <td>Access policy of the bucket</td>
       <td>Private</td>
       <td>no</td>
-      <td>[Private, PublicRead, CloudFrontRead, ElbAccessLogWrite]</td>
+      <td>[Private, PublicRead, CloudFrontRead, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite]</td>
     </tr>
     <tr>
       <td>Versioning</td>
