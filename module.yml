@@ -201,6 +201,7 @@ Resources:
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Principal: '*'
           Action: 's3:PutObject*'
@@ -216,6 +217,7 @@ Resources:
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Principal: '*'
           Action: 's3:GetObject'
@@ -227,6 +229,7 @@ Resources:
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Principal:
             CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
@@ -239,6 +242,7 @@ Resources:
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Principal:
             AWS: # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html#access-logging-bucket-permissions
@@ -262,12 +266,26 @@ Resources:
           Action: 's3:PutObject'
           Effect: Allow
           Resource: !Sub '${Bucket.Arn}/*AWSLogs/${AWS::AccountId}/*'
+        - Principal:
+            Service: 'delivery.logs.amazonaws.com' # https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html
+          Action: 's3:PutObject'
+          Effect: Allow
+          Resource: !Sub '${Bucket.Arn}/*AWSLogs/${AWS::AccountId}/*'
+          Condition:
+            StringEquals:
+              's3:x-amz-acl': 'bucket-owner-full-control'
+        - Principal:
+            Service: 'delivery.logs.amazonaws.com' # https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html
+          Action: 's3:GetBucketAcl'
+          Effect: Allow
+          Resource: !GetAtt 'Bucket.Arn'
   BucketPolicyConfigWrite:
     Condition: HasConfigWriteAccess
     Type: 'AWS::S3::BucketPolicy'
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Effect: Allow
           Principal:
@@ -288,6 +306,7 @@ Resources:
     Properties:
       Bucket: !Ref Bucket
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
         - Effect: Allow
           Principal:
@@ -312,7 +331,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '1.1.1'
+    Value: '1.2.0'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:
