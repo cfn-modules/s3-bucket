@@ -12,6 +12,61 @@ test('defaults', async t => {
   }
 });
 
+test('access-cloud-front-read', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access-cloud-front-read.yml`, stackName, {}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
+
+test('access-cloud-trail-write', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access-cloud-trail-write.yml`, stackName, {}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
+
+test('access-config-write', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access-config-write.yml`, stackName, {}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
+
+test('access-elb-access-log-write', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access-elb-access-log-write.yml`, stackName, {}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
+
+test('access-public-read', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access-public-read.yml`, stackName, {}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
+
 test('with-bucketname', async t => {
   const stackName = cfntest.stackName();
   try {
