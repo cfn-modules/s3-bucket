@@ -72,7 +72,7 @@ Resources:
       <td>Access policy of the bucket</td>
       <td>Private</td>
       <td>no</td>
-      <td>[Private, PublicRead, CloudFrontRead, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite]</td>
+      <td>[Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite]</td>
     </tr>
     <tr>
       <td>Versioning</td>
