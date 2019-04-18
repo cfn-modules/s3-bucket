@@ -28,6 +28,7 @@ Resources:
         KmsKeyModule: !GetAtt 'Key.Outputs.StackName' # optional
         BucketName: '' # optional
         Access: Private # optional
+        Cors: Disabled # optional
         Versioning: 'true' # optional
         NoncurrentVersionExpirationInDays: '0' # optional
         ExpirationInDays: '0' # optional
@@ -73,6 +74,13 @@ Resources:
       <td>Private</td>
       <td>no</td>
       <td>[Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite]</td>
+    </tr>
+    <tr>
+      <td>Cors</td>
+      <td>CORS policy of the bucket</td>
+      <td>Disabled</td>
+      <td>no</td>
+      <td>[Disabled, AllowAll]</td>
     </tr>
     <tr>
       <td>Versioning</td>
