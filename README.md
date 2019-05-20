@@ -41,6 +41,15 @@ Resources:
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
 ```
 
+## Examples
+
+* [serverless-iam](https://github.com/cfn-modules/docs/tree/master/examples/serverless-iam)
+* [serverless-image-resize](https://github.com/cfn-modules/docs/tree/master/examples/serverless-image-resize)
+
+## Related modules
+
+* [lambda-function](https://github.com/cfn-modules/lambda-function)
+
 ## Parameters
 
 <table>
