@@ -5,7 +5,7 @@
     "ava": "1.4.1",
     "@cfn-modules/test": "0.5.1",
     "@cfn-modules/s3-bucket": "file:../",
-    "@cfn-modules/kms-key": "1.1.1",
+    "@cfn-modules/kms-key": "1.2.0",
     "@cfn-modules/lambda-function": "2.3.0"
   },
   "scripts": {
