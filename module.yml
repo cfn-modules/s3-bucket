@@ -28,7 +28,7 @@ Parameters:
     Description: 'Access policy of the bucket.'
     Type: String
     Default: Private
-    AllowedValues: [Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite]
+    AllowedValues: [Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite, FlowLogWrite]
   Cors:
     Description: 'CORS policy of the bucket.'
     Type: String
@@ -83,6 +83,7 @@ Conditions:
   HasElbAccessLogWriteAccess: !Equals [!Ref Access, ElbAccessLogWrite]
   HasConfigWriteAccess: !Equals [!Ref Access, ConfigWrite]
   HasCloudTrailWriteAccess: !Equals [!Ref Access, CloudTrailWrite]
+  HasFlowLogWriteAccess: !Equals [!Ref Access, FlowLogWrite]
   HasCorsAllowAll: !Equals [!Ref Cors, AllowAll]
   HasBucketName: !Not [!Equals [!Ref BucketName, '']]
   HasVersioning: !Equals [!Ref Versioning, true]
@@ -329,7 +330,7 @@ Resources:
           Principal:
             Service: 'config.amazonaws.com'
           Action: 's3:PutObject'
-          Resource: !Sub '${Bucket.Arn}/*AWSLogs/${AWS::AccountId}/Config/*'
+          Resource: !Sub '${Bucket.Arn}/*AWSLogs/${AWS::AccountId}/*'
           Condition:
             StringEquals:
               's3:x-amz-acl': 'bucket-owner-full-control'
@@ -354,6 +355,29 @@ Resources:
           Condition:
             StringEquals:
               's3:x-amz-acl': 'bucket-owner-full-control'
+  BucketPolicyFlowLogWrite:
+    Condition: HasFlowLogWriteAccess
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement: # https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-s3.html#flow-logs-s3-permissions
+        - Sid: AWSLogDeliveryWrite
+          Effect: Allow
+          Principal:
+            Service: 'delivery.logs.amazonaws.com'
+          Action: 's3:PutObject'
+          Resource: !Sub '${Bucket.Arn}/*AWSLogs/${AWS::AccountId}/*'
+          Condition:
+            StringEquals:
+              's3:x-amz-acl': 'bucket-owner-full-control'
+        - Sid: AWSLogDeliveryAclCheck
+          Effect: Allow
+          Principal:
+            Service: 'delivery.logs.amazonaws.com'
+          Action: 's3:GetBucketAcl'
+          Resource: !GetAtt 'Bucket.Arn'
   CloudFrontOriginAccessIdentity:
     Condition: HasCloudFrontReadAccess
     Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
@@ -364,7 +388,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '1.4.1'
+    Value: '1.5.0'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:

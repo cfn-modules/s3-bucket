@@ -1,10 +1,13 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'cfn-modules test'
+Parameters:
+  Access:
+    Type: String
 Resources:
   Bucket:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       Parameters:
-        Access: ConfigWrite
+        Access: !Ref Access
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
