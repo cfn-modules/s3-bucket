@@ -56,32 +56,10 @@ test.serial('ElbAccessLogWrite', async t => {
   }
 });
 
-test.serial('ElbAccessLogCrossAccountWrite', async t => {
-  const stackName = cfntest.stackName();
-  try {
-    t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'ElbAccessLogCrossAccountWrite'}));
-    // what could we test here?
-  } finally {
-    t.log(await cfntest.deleteStack(stackName));
-    t.pass();
-  }
-});
-
 test.serial('ConfigWrite', async t => {
   const stackName = cfntest.stackName();
   try {
     t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'ConfigWrite'}));
-    // what could we test here?
-  } finally {
-    t.log(await cfntest.deleteStack(stackName));
-    t.pass();
-  }
-});
-
-test.serial('ConfigCrossAccountWrite', async t => {
-  const stackName = cfntest.stackName();
-  try {
-    t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'ConfigCrossAccountWrite'}));
     // what could we test here?
   } finally {
     t.log(await cfntest.deleteStack(stackName));
@@ -100,32 +78,10 @@ test.serial('CloudTrailWrite', async t => {
   }
 });
 
-test.serial('CloudTrailCrossAccountWrite', async t => {
-  const stackName = cfntest.stackName();
-  try {
-    t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'CloudTrailCrossAccountWrite'}));
-    // what could we test here?
-  } finally {
-    t.log(await cfntest.deleteStack(stackName));
-    t.pass();
-  }
-});
-
 test.serial('FlowLogWrite', async t => {
   const stackName = cfntest.stackName();
   try {
     t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'FlowLogWrite'}));
-    // what could we test here?
-  } finally {
-    t.log(await cfntest.deleteStack(stackName));
-    t.pass();
-  }
-});
-
-test.serial('FlowLogCrossAccountWrite', async t => {
-  const stackName = cfntest.stackName();
-  try {
-    t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'FlowLogCrossAccountWrite'}));
     // what could we test here?
   } finally {
     t.log(await cfntest.deleteStack(stackName));
