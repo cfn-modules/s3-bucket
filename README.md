@@ -82,7 +82,7 @@ Resources:
       <td>Access policy of the bucket</td>
       <td>Private</td>
       <td>no</td>
-      <td>[Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite, FlowLogWrite]</td>
+      <td>[Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite, FlowLogWrite, Custom]</td>
     </tr>
     <tr>
       <td>Cors</td>
