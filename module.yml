@@ -28,7 +28,7 @@ Parameters:
     Description: 'Access policy of the bucket.'
     Type: String
     Default: Private
-    AllowedValues: [Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite, FlowLogWrite]
+    AllowedValues: [Private, PublicRead, CloudFrontRead, CloudFrontAccessLogWrite, ElbAccessLogWrite, ConfigWrite, CloudTrailWrite, FlowLogWrite, Custom]
   Cors:
     Description: 'CORS policy of the bucket.'
     Type: String
@@ -388,7 +388,7 @@ Outputs:
   ModuleId:
     Value: 's3-bucket'
   ModuleVersion:
-    Value: '1.5.0'
+    Value: '1.6.0'
   StackName:
     Value: !Ref 'AWS::StackName'
   Arn:

@@ -1,6 +1,6 @@
 {
   "name": "@cfn-modules/s3-bucket",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "AWS S3 bucket with encryption and backups",
   "author": "Michael Wittig <michael@widdix.de>",
   "license": "Apache-2.0",
