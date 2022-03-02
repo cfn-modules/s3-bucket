@@ -7,13 +7,13 @@ AWS S3 bucket with encryption and backups.
 
 > Install [Node.js and npm](https://nodejs.org/) first!
 
-```
+```bash
 npm i @cfn-modules/s3-bucket
 ```
 
 ## Usage
 
-```
+```yaml
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'cfn-modules example'
@@ -35,6 +35,10 @@ Resources:
         LambdaEventType2: 's3:ObjectRemoved:*' # optional
         LambdaEventTargetLambdaModule3: '' # optional
         LambdaEventType3: 's3:ReducedRedundancyLostObject' # optional
+        BlockPublicAcls: 'false' # optional
+        BlockPublicPolicy: 'false' # optional
+        IgnorePublicAcls: 'false' # optional
+        RestrictPublicBuckets: 'false' # optional
       TemplateURL: './node_modules/@cfn-modules/s3-bucket/module.yml'
 ```
 
@@ -150,6 +154,34 @@ Resources:
       <td>s3:ReducedRedundancyLostObject</td>
       <td>no</td>
       <td><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-event-types-and-destinations">Supported event types</a></td>
+    </tr>
+    <tr>
+      <td>BlockPublicAcls</td>
+      <td>Specifies whether Amazon S3 should block public access control lists (ACLs) for this bucket and objects in this bucket.</td>
+      <td>false</td>
+      <td>no</td>
+      <td>[true, false]</td>
+    </tr>
+    <tr>
+      <td>BlockPublicPolicy</td>
+      <td>Specifies whether Amazon S3 should block public bucket policies for this bucket. Setting this element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows public access.</td>
+      <td>false</td>
+      <td>no</td>
+      <td>[true, false]</td>
+    </tr>
+    <tr>
+      <td>IgnorePublicAcls</td>
+      <td>Specifies whether Amazon S3 should ignore public ACLs for this bucket and objects in this bucket. Setting this element to TRUE causes Amazon S3 to ignore all public ACLs on this bucket and objects in this bucket.</td>
+      <td>false</td>
+      <td>no</td>
+      <td>[true, false]</td>
+    </tr>
+    <tr>
+      <td>RestrictPublicBuckets</td>
+      <td>Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to TRUE restricts access to this bucket to only AWS service principals and authorized users within this account if the bucket has a public policy.</td>
+      <td>false</td>
+      <td>no</td>
+      <td>[true, false]</td>
     </tr>
   </tbody>
 </table>

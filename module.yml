@@ -74,6 +74,26 @@ Parameters:
     Description: 'S3 bucket events you want to receive'
     Type: String
     Default: 's3:ReducedRedundancyLostObject'
+  BlockPublicAcls:
+    Description: 'Specifies whether Amazon S3 should block public access control lists (ACLs) for this bucket and objects in this bucket.'
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  BlockPublicPolicy:
+    Description: 'Specifies whether Amazon S3 should block public bucket policies for this bucket. Setting this element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows public access.'
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  IgnorePublicAcls:
+    Description: 'Specifies whether Amazon S3 should ignore public ACLs for this bucket and objects in this bucket. Setting this element to TRUE causes Amazon S3 to ignore all public ACLs on this bucket and objects in this bucket.'
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  RestrictPublicBuckets:
+    Description: 'Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to TRUE restricts access to this bucket to only AWS service principals and authorized users within this account if the bucket has a public policy.'
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
 Conditions:
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasPrivateAccess: !Equals [!Ref Access, Private]
@@ -225,6 +245,11 @@ Resources:
         # QueueConfigurations: # Using SQS as a target does not work because the SQS queue policy can not be restricted to an AWS account (only to single S3 buckets which is not possible because we don't have that information (cyclic dependency)).
       VersioningConfiguration: !If [HasVersioning, {Status: Enabled}, !If [HadVersioning, {Status: Suspended}, !Ref 'AWS::NoValue']]
       BucketEncryption: !If [HasKmsKeyModule, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: !Ref BlockPublicAcls
+        BlockPublicPolicy: !Ref BlockPublicPolicy
+        IgnorePublicAcls: !Ref IgnorePublicAcls
+        RestrictPublicBuckets: !Ref RestrictPublicBuckets
   BucketPolicyPrivate:
     Condition: HasPrivateAccessAndKmsKeyModule
     Type: 'AWS::S3::BucketPolicy'
