@@ -7,7 +7,7 @@ Resources:
     Properties:
       Parameters:
         Handler: 'with-lambda.handler'
-        Runtime: 'nodejs12.x'
+        Runtime: 'nodejs16.x'
       TemplateURL: './node_modules/@cfn-modules/lambda-function/module.yml'
   Bucket:
     Type: 'AWS::CloudFormation::Stack'
