@@ -232,7 +232,7 @@ Resources:
         - !If [HasLambdaEventTargetLambdaModule2, {Event: !Ref LambdaEventType2, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule2}-Arn'}}, !Ref 'AWS::NoValue']
         - !If [HasLambdaEventTargetLambdaModule3, {Event: !Ref LambdaEventType3, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule3}-Arn'}}, !Ref 'AWS::NoValue']
         # QueueConfigurations: # Using SQS as a target does not work because the SQS queue policy can not be restricted to an AWS account (only to single S3 buckets which is not possible because we don't have that information (cyclic dependency)).
-      PublicAccessBlockConfiguration: !If [HasPublicAccessBlock, {BlockPublicAcls: true, BlockPublicPolicy: !Sub '${BlockPublicPolicy}', IgnorePublicAcls: true, RestrictPublicBuckets: true}, !Ref 'AWS::NoValue'] # AWS Foundational Security Best Practices v1.0.0 S3.8
+      PublicAccessBlockConfiguration: !If [HasPublicAccessBlock, {BlockPublicAcls: true, BlockPublicPolicy: !Sub '${BlockPublicPolicy}', IgnorePublicAcls: true, RestrictPublicBuckets: !Sub '${BlockPublicPolicy}'}, !Ref 'AWS::NoValue'] # AWS Foundational Security Best Practices v1.0.0 S3.8
       VersioningConfiguration: !If [HasVersioning, {Status: Enabled}, !If [HadVersioning, {Status: Suspended}, !Ref 'AWS::NoValue']]
       BucketEncryption: !If [HasKmsKeyModule, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
   BucketPolicyPrivate:
