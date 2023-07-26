@@ -74,6 +74,10 @@ Parameters:
     Description: 'S3 bucket events you want to receive'
     Type: String
     Default: 's3:ReducedRedundancyLostObject'
+  BlockPublicPolicy:
+    Description: 'Whether to allow bucket policies defined outside this template to apply to the bucket'
+    Type: String
+    Default: true
 Conditions:
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasPrivateAccess: !Equals [!Ref Access, Private]
@@ -96,7 +100,8 @@ Conditions:
   HasPartitionPublic: !Equals [!Ref 'AWS::Partition', 'aws']
   HasPartitionChina: !Equals [!Ref 'AWS::Partition', 'aws-cn']
   HasPartitionUsGov: !Equals [!Ref 'AWS::Partition', 'aws-us-gov']
-  HasPublicAccessBlock: !Not [!Condition HasPublicReadAccess]
+  HasBlockPublicPolicy: !Equals [!Ref BlockPublicPolicy, 'true']
+  HasPublicAccessBlock: !Not [!And [!Condition HasPrivateAccess, !Condition HasBlockPublicPolicy]]
 Resources:
   PolicyLambdaEventTarget1:
     Type: 'AWS::IAM::Policy'
@@ -189,6 +194,9 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !If [HasBucketName, !Ref BucketName, !Ref 'AWS::NoValue']
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
       CorsConfiguration: !If
       - HasCorsAllowAll
       - CorsRules:
@@ -224,7 +232,7 @@ Resources:
         - !If [HasLambdaEventTargetLambdaModule2, {Event: !Ref LambdaEventType2, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule2}-Arn'}}, !Ref 'AWS::NoValue']
         - !If [HasLambdaEventTargetLambdaModule3, {Event: !Ref LambdaEventType3, Function: {'Fn::ImportValue': !Sub '${LambdaEventTargetLambdaModule3}-Arn'}}, !Ref 'AWS::NoValue']
         # QueueConfigurations: # Using SQS as a target does not work because the SQS queue policy can not be restricted to an AWS account (only to single S3 buckets which is not possible because we don't have that information (cyclic dependency)).
-      PublicAccessBlockConfiguration: !If [HasPublicAccessBlock, {BlockPublicAcls: true, BlockPublicPolicy: true, IgnorePublicAcls: true, RestrictPublicBuckets: true}, !Ref 'AWS::NoValue'] # AWS Foundational Security Best Practices v1.0.0 S3.8
+      PublicAccessBlockConfiguration: !If [HasPublicAccessBlock, {BlockPublicAcls: true, BlockPublicPolicy: !Sub '${BlockPublicPolicy}', IgnorePublicAcls: true, RestrictPublicBuckets: !Sub '${BlockPublicPolicy}'}, !Ref 'AWS::NoValue'] # AWS Foundational Security Best Practices v1.0.0 S3.8
       VersioningConfiguration: !If [HasVersioning, {Status: Enabled}, !If [HadVersioning, {Status: Suspended}, !Ref 'AWS::NoValue']]
       BucketEncryption: !If [HasKmsKeyModule, {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {KMSMasterKeyID: {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, SSEAlgorithm: 'aws:kms'}}]}, !Ref 'AWS::NoValue']
   BucketPolicyPrivate:
