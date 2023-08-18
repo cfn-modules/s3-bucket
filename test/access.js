@@ -88,3 +88,14 @@ test.serial('FlowLogWrite', async t => {
     t.pass();
   }
 });
+
+test.serial('Custom', async t => {
+  const stackName = cfntest.stackName();
+  try {
+    t.log(await cfntest.createStack(`${__dirname}/access.yml`, stackName, {Access: 'FlowLogWrite'}));
+    // what could we test here?
+  } finally {
+    t.log(await cfntest.deleteStack(stackName));
+    t.pass();
+  }
+});
