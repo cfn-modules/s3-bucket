@@ -6,7 +6,7 @@
     "@cfn-modules/test": "0.7.3",
     "@cfn-modules/s3-bucket": "file:../",
     "@cfn-modules/kms-key": "1.2.1",
-    "@cfn-modules/lambda-function": "2.9.0"
+    "@cfn-modules/lambda-function": "2.10.0"
   },
   "scripts": {
     "test": "eslint . && ava -c 4 *.js"
